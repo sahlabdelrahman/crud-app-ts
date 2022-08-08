@@ -1,0 +1,23 @@
+/** @format */
+
+.header {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  background-color: black;
+  z-index: 99;
+}
+
+.container {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+
+.link {
+  text-decoration: none;
+  color: white;
+}
