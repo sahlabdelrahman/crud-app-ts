@@ -12,6 +12,8 @@ import {
   DialogTitle,
   Button,
   Slide,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 
 import { TransitionProps } from "@mui/material/transitions";
@@ -34,9 +36,25 @@ const Transition = forwardRef(function Transition(
 
 function DeletePost({ id }: { id: number }) {
   const [open, setOpen] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const dispatch = useDispatch<Dispatch<Action>>();
   const { deletePost } = bindActionCreators(actionCreators, dispatch);
+
+  const handleClickSnackbar = () => {
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -46,9 +64,10 @@ function DeletePost({ id }: { id: number }) {
     setOpen(false);
   };
 
-  const handleDelete = () => {
-    deletePost(`${id}`);
+  const handleDelete = async () => {
     handleClose();
+    await deletePost(`${id}`);
+    handleClickSnackbar();
   };
 
   return (
@@ -76,6 +95,20 @@ function DeletePost({ id }: { id: number }) {
           <Button onClick={handleDelete}>Confirm</Button>
         </DialogActions>
       </Dialog>
+      {openSnackbar && <h1>Hello worlds</h1>}
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="warning"
+          sx={{ width: "100%" }}
+        >
+          Post is deleted
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

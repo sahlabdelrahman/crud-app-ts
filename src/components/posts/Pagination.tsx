@@ -1,6 +1,7 @@
 /** @format */
 
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import styles from "./Posts.module.css";
 
 const Pagination = ({
@@ -32,15 +33,15 @@ const Pagination = ({
             key={number}
             className={activeLink === number ? styles.active : ""}
           >
-            <a
-              href={`#${number}`}
+            <Link
+              to="#"
               onClick={() => {
                 paginate(number);
                 setActiveLink(`${number}`);
               }}
             >
               {number}
-            </a>
+            </Link>
           </li>
         ))}
       </ul>

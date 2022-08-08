@@ -24,6 +24,8 @@ import {
   Button,
   Slide,
   TextField,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 
@@ -61,6 +63,22 @@ function EditPost({
   const errors: any = formState.errors;
 
   const [open, setOpen] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  const handleClickSnackbar = () => {
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -70,15 +88,16 @@ function EditPost({
     setOpen(false);
   };
 
-  let onSubmit = (details: { title: string; description: string }) => {
+  let onSubmit = async (details: { title: string; description: string }) => {
     let data = {
       id: id,
       title: details.title,
       body: details.description,
     };
 
-    editPost(data);
     handleClose();
+    await editPost(data);
+    handleClickSnackbar();
   };
 
   return (
@@ -134,6 +153,19 @@ function EditPost({
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="info"
+          sx={{ width: "100%" }}
+        >
+          Post is Updated
+        </Alert>
+      </Snackbar>
     </div>
   );
 }

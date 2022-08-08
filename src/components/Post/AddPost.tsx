@@ -20,6 +20,8 @@ import {
   Button,
   Slide,
   TextField,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 
@@ -48,17 +50,7 @@ const AddPost = () => {
 
   const errors: any = formState.errors;
 
-  const onSubmit = (details: { title: string; description: string }) => {
-    const data = {
-      // userId: 1,
-      // id: Math.round(Math.random() * 1000000),
-      title: details.title,
-      body: details.description,
-    };
-
-    addPost(data);
-    handleClose();
-  };
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const [open, setOpen] = useState(false);
 
@@ -72,6 +64,34 @@ const AddPost = () => {
       title: "",
       description: "",
     });
+  };
+
+  const handleClickSnackbar = () => {
+    setOpenSnackbar(true);
+  };
+
+  const handleCloseSnackbar = (
+    event?: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnackbar(false);
+  };
+
+  const onSubmit = async (details: { title: string; description: string }) => {
+    const data = {
+      // userId: 1,
+      // id: Math.round(Math.random() * 1000000),
+      title: details.title,
+      body: details.description,
+    };
+
+    handleClose();
+    await addPost(data);
+    handleClickSnackbar();
   };
 
   return (
@@ -126,6 +146,19 @@ const AddPost = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Post is added successfully
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
